@@ -49,7 +49,7 @@ pinMode(LED_BUILTIN, OUTPUT);
 pinMode(tx_in, INPUT_PULLUP);
 pinMode(tx_out,OUTPUT);
 
-}  
+}//end of setup  
 
 byte daten_pw1; 
 int i;
@@ -114,13 +114,13 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
     }
 
     
-}//*********end of loop
+}//end of loop
 
 //-------------------------------------------------------------------
  void PA_data_start(){                                  // 1st byte was a 254
   //-------------------------------------------------------------------
 
-delay(10);
+  delay(10);
   for ( i = 0; i < 6; i++) {                     
 
     if (uart.available() > 0) {           
@@ -136,13 +136,13 @@ delay(10);
       else{
         data_send_2();
       }
-      }                          
+     }                          
     }
   }
 
  }
  void data_send_1(){
-   uart_busy = true;
+        uart_busy = true;
         uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
@@ -153,12 +153,12 @@ delay(10);
         uart.write(bnd_2);    //10Mhz
         uart.write(bnd_1);    //100Mhz
         uart.write(data_stop);    //0xFD end of telegramm
-  band_old=band;
-  uart_busy = false;
+        band_old=band;
+        uart_busy = false;
  }
 
   void data_send_2(){
-  uart_busy = true;
+        uart_busy = true;
         uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
@@ -175,7 +175,7 @@ delay(10);
 
  
   void data_send_3(){
-  uart_busy = true;
+        uart_busy = true;
         uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
@@ -183,6 +183,6 @@ delay(10);
         uart.write(0x00);
         uart.write(mode);
         uart.write(data_stop);    //0xFD end of telegramm
-  uart_busy = false;
- }
+        uart_busy = false;
+  }
  
