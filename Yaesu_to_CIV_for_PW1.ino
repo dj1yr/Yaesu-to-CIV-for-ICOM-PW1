@@ -115,7 +115,7 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
   //-------------------------------------------------------------------
 
   delay(10);
-  for ( i = 0; i < 6; i++) {                     
+  for ( i = 0; i < 6; i++) {            //read 6 bytes from PW1            
 
     if (uart.available() > 0) {           
 
@@ -123,7 +123,7 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
 
       String pw1_string = String(buffget_pw1tx[i], HEX);
 
-     if (buffget_pw1tx[i] ==  253   ) {
+     if (buffget_pw1tx[i] ==  253){   //if read byte 0xFD
       if (start_loop == false){
         data_send_3();
       }
@@ -137,32 +137,32 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
  }
  void data_send_1(){
         uart_busy = true;
-        uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
+        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
-        uart.write(cmd_1);    //10hz+1hz
-        uart.write(bnd_5);    //1khz+100hz    
-        uart.write(bnd_4);    //10khz
-        uart.write(bnd_3);    //100khz
-        uart.write(bnd_2);    //10Mhz
-        uart.write(bnd_1);    //100Mhz
-        uart.write(data_stop);    //0xFD end of telegramm
+        uart.write(cmd_1);        //cmd is set to 0x00
+        uart.write(bnd_5);        //1khz+100hz    
+        uart.write(bnd_4);        //10khz
+        uart.write(bnd_3);        //100khz
+        uart.write(bnd_2);        //10Mhz
+        uart.write(bnd_1);        //100Mhz
+        uart.write(data_stop);    //0xFD end of telegram
         band_old=band;
         uart_busy = false;
  }
 
   void data_send_2(){
         uart_busy = true;
-        uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
+        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
-        uart.write(cmd_2);    
-        uart.write(bnd_5);    //1khz+100hz    
-        uart.write(bnd_4);    //10khz
-        uart.write(bnd_3);    //100khz
-        uart.write(bnd_2);    //10Mhz
-        uart.write(bnd_1);    //100Mhz
-        uart.write(data_stop);    //0xFD end of telegramm
+        uart.write(cmd_2);        //cmd is set to 0x03
+        uart.write(bnd_5);        //1khz+100hz    
+        uart.write(bnd_4);        //10khz
+        uart.write(bnd_3);        //100khz
+        uart.write(bnd_2);        //10Mhz
+        uart.write(bnd_1);        //100Mhz
+        uart.write(data_stop);    //0xFD end of telegram
         start_loop = false;
         uart_busy = false;
   }
@@ -170,12 +170,12 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
  
   void data_send_3(){
         uart_busy = true;
-        uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
+        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
-        uart.write(cmd_3);    //10hz+1hz
+        uart.write(cmd_3);        //cmd is set to 0x04
         uart.write(0x00);
-        uart.write(mode);
-        uart.write(data_stop);    //0xFD end of telegramm
+        uart.write(mode);         // mode = lsb 
+        uart.write(data_stop);    //0xFD end of telegram
         uart_busy = false;
   }
