@@ -9,7 +9,7 @@ int y_c = 15;
 int y_d = 14;
 int tx_in = 18;
 int tx_out = 19;
-int led = A6;             // Atmega8 TQFP32
+int led = 13;             // led for debug
 
 byte band=0;              //actual band from Yaesu TRX
 byte band_old=0;
