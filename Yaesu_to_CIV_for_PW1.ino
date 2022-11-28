@@ -51,7 +51,7 @@ pinMode(led, OUTPUT);
 byte daten_pw1; 
 int i;
 
-int buffget_pw1tx[64];               // the receive buffer on TRX end               // the frequency bytes memory
+int buffget_pw1tx[48];               //receive buffer
 boolean uart_busy;
 
 void loop(){
@@ -121,7 +121,6 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
 
       buffget_pw1tx[i] = uart.read();     
 
-      String pw1_string = String(buffget_pw1tx[i], HEX);
 
      if (buffget_pw1tx[i] ==  253){   //if read byte 0xFD
       if (start_loop == false){
