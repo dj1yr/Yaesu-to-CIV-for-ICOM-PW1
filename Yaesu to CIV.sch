@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="1.27" unitdist="mm" unit="mm" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="16" fill="1" visible="no" active="no"/>
@@ -15705,6 +15705,13 @@ Source: www.kingbright.com</description>
 <pinref part="IC1" gate="G$1" pin="PB5(SCK)"/>
 <wire x1="124.46" y1="17.78" x2="125.73" y2="17.78" width="0.1524" layer="91"/>
 <pinref part="SCK" gate="1" pin="P"/>
+<wire x1="125.73" y1="17.78" x2="125.73" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="125.73" y1="15.24" x2="142.24" y2="15.24" width="0.1524" layer="91"/>
+<junction x="125.73" y="17.78"/>
+<wire x1="142.24" y1="15.24" x2="142.24" y2="20.32" width="0.1524" layer="91"/>
+<pinref part="LED1" gate="G$1" pin="A"/>
+<wire x1="142.24" y1="20.32" x2="148.59" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="148.59" y1="20.32" x2="148.59" y2="19.05" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$25" class="0">
@@ -15814,16 +15821,6 @@ Source: www.kingbright.com</description>
 <pinref part="L5" gate="G$1" pin="2"/>
 <wire x1="187.96" y1="78.74" x2="177.8" y2="78.74" width="0.1524" layer="91"/>
 <junction x="187.96" y="78.74"/>
-</segment>
-</net>
-<net name="C" class="0">
-<segment>
-<wire x1="143.51" y1="30.48" x2="148.59" y2="30.48" width="0.1524" layer="91"/>
-<pinref part="LED1" gate="G$1" pin="A"/>
-<wire x1="148.59" y1="30.48" x2="148.59" y2="19.05" width="0.1524" layer="91"/>
-<pinref part="IC1" gate="G$1" pin="ADC6"/>
-<wire x1="124.46" y1="60.96" x2="143.51" y2="60.96" width="0.1524" layer="91"/>
-<wire x1="143.51" y1="60.96" x2="143.51" y2="30.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$36" class="0">
