@@ -1,16 +1,15 @@
-
-
 //#define uart Serial1
 #define uart Serial
 
 
 
-int y_a = 2;
-int y_b = 3;
-int y_c = 4;
-int y_d = 5;
-int tx_in = 6;
-int tx_out = 7;
+int y_a = 17;
+int y_b = 16;
+int y_c = 15;
+int y_d = 14;
+int tx_in = 18;
+int tx_out = 19;
+int led = A6;             // Atmega8 TQFP32
 
 byte band=0;              //actual band from Yaesu TRX
 byte band_old=0;
@@ -41,28 +40,27 @@ pinMode(y_a,INPUT);
 pinMode(y_b,INPUT);  
 pinMode(y_c,INPUT);
 pinMode(y_d,INPUT);
-pinMode(LED_BUILTIN, OUTPUT);
+
 pinMode(tx_in, INPUT_PULLUP);
 pinMode(tx_out,OUTPUT);
+
+pinMode(led, OUTPUT);
 
 }//end of setup  
 
 byte daten_pw1; 
 int i;
-int j;
-int incomingTRX;                       //incoming character on TRX side
-int incomingPC;                        //incoming character on PC side
 
-int buffget_pw1tx[63];               // the receive buffer on TRX end               // the frequency bytes memory
+int buffget_pw1tx[64];               // the receive buffer on TRX end               // the frequency bytes memory
 boolean uart_busy;
 
 void loop(){
 
-y_a = digitalRead(2);
-y_b = digitalRead(3);
-y_c = digitalRead(4);
-y_d = digitalRead(5);
-tx_in = digitalRead(6);
+y_a = digitalRead(17);
+y_b = digitalRead(16);
+y_c = digitalRead(15);
+y_d = digitalRead(14);
+tx_in = digitalRead(18);
 
 // Yaesu bcd to CIV frequency ->Mhz+100*khz
 
@@ -181,4 +179,3 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
         uart.write(data_stop);    //0xFD end of telegramm
         uart_busy = false;
   }
- 
