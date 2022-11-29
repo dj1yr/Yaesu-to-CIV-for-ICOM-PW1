@@ -74,18 +74,18 @@ tx_in = digitalRead(6);
 
 // Yaesu bcd to CIV frequency ->Mhz+100*khz
 
-if (y_a==0 && y_b==0 && y_c==0 && y_d==0){bnd_2=0x51; bnd_3=0x00; tx_ok = false; band=1;}     //no band signals -> select 6m send 51.00Mhz
-if (y_a==1 && y_b==0 && y_c==0 && y_d==0){bnd_2=0x01; bnd_3=0x90; tx_ok = true; band=2;}      //160m send 1.90Mhz
-if (y_a==0 && y_b==1 && y_c==0 && y_d==0){bnd_2=0x03; bnd_3=0x70; tx_ok = true; band=3;}      //80m send 3.70Mhz
-if (y_a==1 && y_b==1 && y_c==0 && y_d==0){bnd_2=0x07; bnd_3=0x10; tx_ok = true; band=4;}      //60m/40m send 7.10Mhz
-if (y_a==0 && y_b==0 && y_c==1 && y_d==0){bnd_2=0x10; bnd_3=0x05; tx_ok = true; band=5;}      //30m send 10.05Mhz
-if (y_a==1 && y_b==0 && y_c==1 && y_d==0){bnd_2=0x14; bnd_3=0x20; tx_ok = true; band=6;}      //20m send 14.20Mhz
-if (y_a==0 && y_b==1 && y_c==1 && y_d==0){bnd_2=0x18; bnd_3=0x06; tx_ok = true; band=7;}      //17m send 18.06Mhz
-if (y_a==1 && y_b==1 && y_c==1 && y_d==0){bnd_2=0x21; bnd_3=0x20; tx_ok = true; band=8;}      //15m send 21.20Mhz
-if (y_a==0 && y_b==0 && y_c==0 && y_d==1){bnd_2=0x24; bnd_3=0x90; tx_ok = true; band=9;}      //12m send 24.90Mhz
-if (y_a==1 && y_b==0 && y_c==0 && y_d==1){bnd_2=0x28; bnd_3=0x50; tx_ok = true; band=10;}     //10m send 25.500Mhz
-if (y_a==0 && y_b==1 && y_c==0 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = true; band=11;}     //6m send 51.00Mhz
-if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false; band=12;}    // Yaesu 4m band selected, send 51.00Mhz
+if (y_a==0 && y_b==0 && y_c==0 && y_d==0){bnd_2=0x51; bnd_3=0x00; tx_ok = false; band=1;}     //no band signals -> select 6m send 51.00Mhz, TX disabled
+if (y_a==1 && y_b==0 && y_c==0 && y_d==0){bnd_2=0x01; bnd_3=0x90; tx_ok = true; band=2;}      //160m send 1.90Mhz, TX enabled
+if (y_a==0 && y_b==1 && y_c==0 && y_d==0){bnd_2=0x03; bnd_3=0x70; tx_ok = true; band=3;}      //80m send 3.70Mhz, TX enabled
+if (y_a==1 && y_b==1 && y_c==0 && y_d==0){bnd_2=0x07; bnd_3=0x10; tx_ok = true; band=4;}      //60m/40m send 7.10Mhz, TX enabled
+if (y_a==0 && y_b==0 && y_c==1 && y_d==0){bnd_2=0x10; bnd_3=0x05; tx_ok = true; band=5;}      //30m send 10.05Mhz, TX enabled
+if (y_a==1 && y_b==0 && y_c==1 && y_d==0){bnd_2=0x14; bnd_3=0x20; tx_ok = true; band=6;}      //20m send 14.20Mhz, TX enabled
+if (y_a==0 && y_b==1 && y_c==1 && y_d==0){bnd_2=0x18; bnd_3=0x06; tx_ok = true; band=7;}      //17m send 18.06Mhz, TX enabled
+if (y_a==1 && y_b==1 && y_c==1 && y_d==0){bnd_2=0x21; bnd_3=0x20; tx_ok = true; band=8;}      //15m send 21.20Mhz, TX enabled
+if (y_a==0 && y_b==0 && y_c==0 && y_d==1){bnd_2=0x24; bnd_3=0x90; tx_ok = true; band=9;}      //12m send 24.90Mhz, TX enabled
+if (y_a==1 && y_b==0 && y_c==0 && y_d==1){bnd_2=0x28; bnd_3=0x50; tx_ok = true; band=10;}     //10m send 25.500Mhz, TX enabled
+if (y_a==0 && y_b==1 && y_c==0 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = true; band=11;}     //6m send 51.00Mhz, TX enabled
+if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false; band=12;}    // Yaesu 4m band selected, send 51.00Mhz, TX disabled
 
 
       if (band_old!=band){
