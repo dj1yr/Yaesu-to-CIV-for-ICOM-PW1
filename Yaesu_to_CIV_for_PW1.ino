@@ -1,8 +1,9 @@
-//#define uart Serial1
+
+
+
+/*
+//Atmega8 config
 #define uart Serial
-
-
-
 int y_a = 17;
 int y_b = 16;
 int y_c = 15;
@@ -10,6 +11,19 @@ int y_d = 14;
 int tx_in = 18;
 int tx_out = 19;
 int led = 13;             // led for debug
+*/
+
+
+// Arduino Mega 2560 config
+#define uart Serial1
+int y_a = 2;
+int y_b = 3;
+int y_c = 4;
+int y_d = 5;
+int tx_in = 6;
+int tx_out = 7;
+
+
 
 byte band=0;              //actual band from Yaesu TRX
 byte band_old=0;
@@ -40,27 +54,25 @@ pinMode(y_a,INPUT);
 pinMode(y_b,INPUT);  
 pinMode(y_c,INPUT);
 pinMode(y_d,INPUT);
-
+pinMode(LED_BUILTIN, OUTPUT);
 pinMode(tx_in, INPUT_PULLUP);
 pinMode(tx_out,OUTPUT);
-
-pinMode(led, OUTPUT);
 
 }//end of setup  
 
 byte daten_pw1; 
 int i;
 
-int buffget_pw1tx[48];               //receive buffer
+int buffer_pw1tx[6];               // the receive buffer on TRX end               // the frequency bytes memory
 boolean uart_busy;
 
 void loop(){
 
-y_a = digitalRead(17);
-y_b = digitalRead(16);
-y_c = digitalRead(15);
-y_d = digitalRead(14);
-tx_in = digitalRead(18);
+y_a = digitalRead(2);
+y_b = digitalRead(3);
+y_c = digitalRead(4);
+y_d = digitalRead(5);
+tx_in = digitalRead(6);
 
 // Yaesu bcd to CIV frequency ->Mhz+100*khz
 
@@ -98,13 +110,10 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
     }
 
     if(tx_in == LOW && tx_ok == true){
-      uart_busy = true;
-      data_send_1();
       digitalWrite(tx_out,HIGH);
     }
     else{
       digitalWrite(tx_out,LOW);
-      uart_busy = false;
     }
 
     
@@ -115,66 +124,79 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
   //-------------------------------------------------------------------
 
   delay(10);
-  for ( i = 0; i < 6; i++) {            //read 6 bytes from PW1            
+  for ( i = 0; i < 6; i++) {                     
 
     if (uart.available() > 0) {           
 
-      buffget_pw1tx[i] = uart.read();     
+      buffer_pw1tx[i] = uart.read(); 
 
-
-     if (buffget_pw1tx[i] ==  253){   //if read byte 0xFD
-      if (start_loop == false){
-        data_send_3();
-      }
-      else{
-        data_send_2();
-      }
-     }                          
+//debug
+ /*     String byte_string = String(buffer_pw1tx[i], HEX);
+        if (buffer_pw1tx[i] < 6) Serial.print ("0");  // format Serial monitor print
+        Serial.print (byte_string);
+        Serial.print (" ");
+      
+      if (buffer_pw1tx[i] ==  253   ) {
+       Serial.println ("");
+      }*/                          
     }
   }
 
- }
+
+
+      if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_2)){
+          data_send_2();
+
+      }
+
+      if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_3)){
+          data_send_3();
+      }
+}
+
+ 
+
+
+  
  void data_send_1(){
         uart_busy = true;
-        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
+        uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
-        uart.write(cmd_1);        //cmd is set to 0x00
-        uart.write(bnd_5);        //1khz+100hz    
-        uart.write(bnd_4);        //10khz
-        uart.write(bnd_3);        //100khz
-        uart.write(bnd_2);        //10Mhz
-        uart.write(bnd_1);        //100Mhz
-        uart.write(data_stop);    //0xFD end of telegram
+        uart.write(cmd_1);    //10hz+1hz
+        uart.write(bnd_5);    //1khz+100hz    
+        uart.write(bnd_4);    //10khz
+        uart.write(bnd_3);    //100khz
+        uart.write(bnd_2);    //10Mhz
+        uart.write(bnd_1);    //100Mhz
+        uart.write(data_stop);    //0xFD end of telegramm
         band_old=band;
         uart_busy = false;
  }
 
   void data_send_2(){
-        uart_busy = true;
-        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
+        uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
-        uart.write(cmd_2);        //cmd is set to 0x03
-        uart.write(bnd_5);        //1khz+100hz    
-        uart.write(bnd_4);        //10khz
-        uart.write(bnd_3);        //100khz
-        uart.write(bnd_2);        //10Mhz
-        uart.write(bnd_1);        //100Mhz
-        uart.write(data_stop);    //0xFD end of telegram
-        start_loop = false;
-        uart_busy = false;
+        uart.write(cmd_2);    
+        uart.write(bnd_5);    //1khz+100hz    
+        uart.write(bnd_4);    //10khz
+        uart.write(bnd_3);    //100khz
+        uart.write(bnd_2);    //10Mhz
+        uart.write(bnd_1);    //100Mhz
+        uart.write(data_stop);    //0xFD end of telegramm
+
   }
 
  
   void data_send_3(){
         uart_busy = true;
-        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
+        uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
-        uart.write(cmd_3);        //cmd is set to 0x04
+        uart.write(cmd_3);    //10hz+1hz
         uart.write(0x00);
-        uart.write(mode);         // mode = lsb 
-        uart.write(data_stop);    //0xFD end of telegram
+        uart.write(mode);
+        uart.write(data_stop);    //0xFD end of telegramm
         uart_busy = false;
   }
