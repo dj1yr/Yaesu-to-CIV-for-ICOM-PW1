@@ -131,7 +131,7 @@ void PA_data_start(){
       }
     }
       if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&((buffer_pw1tx[3] == cmd_2)||(buffer_pw1tx[3] == cmd_3))){    //check wich command is send from PW1 -> frequence request or mode request
- //         data_send_2();
+
           if (buffer_pw1tx[3] == cmd_3){
             cmd_req = true;
             data_send();
@@ -141,10 +141,6 @@ void PA_data_start(){
             data_send();
           } 
       }
-
- //     if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_3)){    //check wich command is send from PW1 -> mode request
- //         data_send_3();
- //     }
 }// end of void PA_data_start
   
 
