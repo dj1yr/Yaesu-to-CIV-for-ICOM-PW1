@@ -53,7 +53,7 @@ pinMode(y_a,INPUT);
 pinMode(y_b,INPUT);  
 pinMode(y_c,INPUT);
 pinMode(y_d,INPUT);
-pinMode(LED_BUILTIN, OUTPUT);
+//pinMode(led, OUTPUT);
 pinMode(tx_in, INPUT_PULLUP);
 pinMode(tx_out,OUTPUT);
 
