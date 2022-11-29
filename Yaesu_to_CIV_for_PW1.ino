@@ -111,76 +111,61 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
     
 }//end of loop
 
-//-------------------------------------------------------------------
-  void PA_data_start(){                                  // 1st byte was a 254
-  //-------------------------------------------------------------------
+
+void PA_data_start(){                                  
 
   delay(10);
-  for ( i = 0; i < 6; i++) {                     
-
-    if (uart.available() > 0) {           
-
-      buffer_pw1tx[i] = uart.read(); 
-
-//debug
- /*     String byte_string = String(buffer_pw1tx[i], HEX);
-        if (buffer_pw1tx[i] < 6) Serial.print ("0");  // format Serial monitor print
-        Serial.print (byte_string);
-        Serial.print (" ");
-      
-      if (buffer_pw1tx[i] ==  253   ) {
-       Serial.println ("");
-      }*/                          
+  
+    for ( i = 0; i < 6; i++) {                     
+      if (uart.available() > 0) {           
+        buffer_pw1tx[i] = uart.read();                           
+      }
     }
-  }
-
-
-
-      if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_2)){
+      if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_2)){    //check wich command is send from PW1 -> frequence request
           data_send_2();
-
       }
 
-      if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_3)){
+      if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_3)){    //check wich command is send from PW1 -> mode request
           data_send_3();
       }
-  }
+}// end of void PA_data_start
   
-   void data_send_1(){
+   void data_send_1(){            // send bytes triggered by band change from TRX
 
-        uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
+        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
-        uart.write(cmd_1);    //10hz+1hz
-        uart.write(bnd_5);    //1khz+100hz    
-        uart.write(bnd_4);    //10khz
-        uart.write(bnd_3);    //100khz
-        uart.write(bnd_2);    //10Mhz
-        uart.write(bnd_1);    //100Mhz
+        uart.write(cmd_1);        //10hz+1hz
+        uart.write(bnd_5);        //1khz+100hz    
+        uart.write(bnd_4);        //10khz
+        uart.write(bnd_3);        //100khz
+        uart.write(bnd_2);        //10Mhz
+        uart.write(bnd_1);        //100Mhz
         uart.write(data_stop);    //0xFD end of telegramm
         band_old=band;
   }
 
-  void data_send_2(){
-        uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
+  void data_send_2(){             // send frequence bytes triggered by PW1
+    
+        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
         uart.write(cmd_2);    
-        uart.write(bnd_5);    //1khz+100hz    
-        uart.write(bnd_4);    //10khz
-        uart.write(bnd_3);    //100khz
-        uart.write(bnd_2);    //10Mhz
-        uart.write(bnd_1);    //100Mhz
+        uart.write(bnd_5);        //1khz+100hz    
+        uart.write(bnd_4);        //10khz
+        uart.write(bnd_3);        //100khz
+        uart.write(bnd_2);        //10Mhz
+        uart.write(bnd_1);        //100Mhz
         uart.write(data_stop);    //0xFD end of telegramm
   }
 
  
-  void data_send_3(){
+  void data_send_3(){             // send mode bytes triggered by PW1
 
-        uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
+        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
-        uart.write(cmd_3);    //10hz+1hz
+        uart.write(cmd_3);        
         uart.write(0x00);
         uart.write(mode);
         uart.write(data_stop);    //0xFD end of telegramm
