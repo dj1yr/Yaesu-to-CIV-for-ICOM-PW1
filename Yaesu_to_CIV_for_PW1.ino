@@ -66,11 +66,22 @@ int buffer_pw1tx[6];               //receive buffer, 6 bytes from PW1
 
 void loop(){
 
+/*
+// Arduino Mega 2560
 y_a = digitalRead(2);
 y_b = digitalRead(3);
 y_c = digitalRead(4);
 y_d = digitalRead(5);
 tx_in = digitalRead(6);
+*/
+
+// Atmega 8
+y_a = digitalRead(17);
+y_b = digitalRead(16);
+y_c = digitalRead(15);
+y_d = digitalRead(14);
+tx_in = digitalRead(18);
+
 
 // Yaesu bcd to CIV frequency ->Mhz+100*khz
 
