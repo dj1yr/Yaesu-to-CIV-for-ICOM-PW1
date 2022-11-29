@@ -62,7 +62,7 @@ pinMode(tx_out,OUTPUT);
 byte daten_pw1; 
 int i;
 
-int buffer_pw1tx[6];               // the receive buffer on TRX end               // the frequency bytes memory
+int buffer_pw1tx[6];               //receive buffer, 6 bytes from PW1 
 
 void loop(){
 
