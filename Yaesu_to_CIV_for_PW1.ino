@@ -108,7 +108,7 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
         if ((daten_pw1 == 254)){ 
             PA_data_start();
         }
-        delay (1);  // allow buffer to fill
+        delay (1);                      // time for buffer to fill
 
     
 
