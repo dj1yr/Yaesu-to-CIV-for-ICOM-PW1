@@ -1,7 +1,7 @@
 
 
 
-/*
+
 //Atmega8 config
 #define uart Serial
 int y_a = 17;
@@ -11,9 +11,9 @@ int y_d = 14;
 int tx_in = 18;
 int tx_out = 19;
 int led = 13;             // led for debug
-*/
 
 
+/*
 // Arduino Mega 2560 config
 #define uart Serial1
 int y_a = 2;
@@ -22,7 +22,7 @@ int y_c = 4;
 int y_d = 5;
 int tx_in = 6;
 int tx_out = 7;
-
+*/
 
 
 byte band=0;              //actual band from Yaesu TRX
@@ -45,7 +45,6 @@ byte mode = 0x02;     //mode = lsb
 byte data_stop = 0xFD;
 
 boolean tx_ok = false;
-boolean start_loop =true;
 
 void setup(){
 uart.begin(9600);
@@ -64,7 +63,6 @@ byte daten_pw1;
 int i;
 
 int buffer_pw1tx[6];               // the receive buffer on TRX end               // the frequency bytes memory
-boolean uart_busy;
 
 void loop(){
 
@@ -90,37 +88,31 @@ if (y_a==0 && y_b==1 && y_c==0 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = true; 
 if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false; band=12;}    // Yaesu 4m band selected, send 51.00Mhz
 
 
-
-    if(uart_busy == false){
       if (band_old!=band){
       data_send_1();
       }
-    }
+    
 
-    if (uart_busy==false){
-      uart_busy = true;
-      daten_pw1 = uart.read();
-
+        daten_pw1 = uart.read();
         if ((daten_pw1 == 254)){ 
             PA_data_start();
         }
-      delay (1);  // allow buffer to fill
-      uart_busy = false;
+        delay (1);  // allow buffer to fill
 
-    }
+    
 
-    if(tx_in == LOW && tx_ok == true){
+      if(tx_in == LOW && tx_ok == true){
       digitalWrite(tx_out,HIGH);
-    }
-    else{
+      }
+      else{
       digitalWrite(tx_out,LOW);
-    }
+      }
 
     
 }//end of loop
 
 //-------------------------------------------------------------------
- void PA_data_start(){                                  // 1st byte was a 254
+  void PA_data_start(){                                  // 1st byte was a 254
   //-------------------------------------------------------------------
 
   delay(10);
@@ -152,14 +144,10 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
       if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_3)){
           data_send_3();
       }
-}
-
- 
-
-
+  }
   
- void data_send_1(){
-        uart_busy = true;
+   void data_send_1(){
+
         uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
@@ -171,8 +159,7 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
         uart.write(bnd_1);    //100Mhz
         uart.write(data_stop);    //0xFD end of telegramm
         band_old=band;
-        uart_busy = false;
- }
+  }
 
   void data_send_2(){
         uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
@@ -185,12 +172,11 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
         uart.write(bnd_2);    //10Mhz
         uart.write(bnd_1);    //100Mhz
         uart.write(data_stop);    //0xFD end of telegramm
-
   }
 
  
   void data_send_3(){
-        uart_busy = true;
+
         uart.write(data_start,2);    //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
@@ -198,5 +184,4 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
         uart.write(0x00);
         uart.write(mode);
         uart.write(data_stop);    //0xFD end of telegramm
-        uart_busy = false;
   }
