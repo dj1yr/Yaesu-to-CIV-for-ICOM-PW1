@@ -8,6 +8,7 @@ int tx_in = 18;
 int tx_out = 19;
 int led = 13;             // led for debug
 
+
 /*
 // Arduino Mega 2560 config
 #define uart Serial1
@@ -29,8 +30,6 @@ byte from_addr = 0x30;    //TRX adress, e.g. IC-726
 byte cmd_1 = 0x00;
 byte cmd_2 = 0x03;    //frequ. request
 byte cmd_3 = 0x04;    //mode request
-boolean cmd_req = false;    // false = frequence request, true = mode request
-
 
 byte bnd_1 = 0x00;    //100*Mhz
 byte bnd_2 = 0x51;    //10*Mhz
@@ -97,8 +96,7 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
 
 
       if (band_old!=band){
-        cmd_req=false;
-        data_send();
+      data_send_1();
       }
     
 
@@ -130,38 +128,52 @@ void PA_data_start(){
         buffer_pw1tx[i] = uart.read();                           
       }
     }
-      if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&((buffer_pw1tx[3] == cmd_2)||(buffer_pw1tx[3] == cmd_3))){    //check wich command is send from PW1 -> frequence request or mode request
+      if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_2)){    //check wich command is send from PW1 -> frequence request
+          data_send_2();
+      }
 
-          if (buffer_pw1tx[3] == cmd_3){
-            cmd_req = true;
-            data_send();
-          }
-          else{
-            cmd_req=false;
-            data_send();
-          } 
+      if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_3)){    //check wich command is send from PW1 -> mode request
+          data_send_3();
       }
 }// end of void PA_data_start
   
+   void data_send_1(){            // send bytes triggered by band change from TRX
 
-  void data_send(){
         uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
         uart.write(to_addr);      //PW1 adress
         uart.write(from_addr);    //TRX adress
-        if(cmd_req == true){
-          uart.write(cmd_3);
-          uart.write(0x00);
-          uart.write(mode); 
-        }
-        else{
-          uart.write(cmd_2);  
-          uart.write(bnd_5);        //1khz+100hz    
-          uart.write(bnd_4);        //10khz
-          uart.write(bnd_3);        //100khz
-          uart.write(bnd_2);        //10Mhz
-          uart.write(bnd_1);        //100Mhz             
-        }
-
+        uart.write(cmd_1);        //10hz+1hz
+        uart.write(bnd_5);        //1khz+100hz    
+        uart.write(bnd_4);        //10khz
+        uart.write(bnd_3);        //100khz
+        uart.write(bnd_2);        //10Mhz
+        uart.write(bnd_1);        //100Mhz
         uart.write(data_stop);    //0xFD end of telegramm
-        cmd_req = false;  
+        band_old=band;
+  }
+
+  void data_send_2(){             // send frequence bytes triggered by PW1
+    
+        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
+        uart.write(to_addr);      //PW1 adress
+        uart.write(from_addr);    //TRX adress
+        uart.write(cmd_2);    
+        uart.write(bnd_5);        //1khz+100hz    
+        uart.write(bnd_4);        //10khz
+        uart.write(bnd_3);        //100khz
+        uart.write(bnd_2);        //10Mhz
+        uart.write(bnd_1);        //100Mhz
+        uart.write(data_stop);    //0xFD end of telegramm
+  }
+
+ 
+  void data_send_3(){             // send mode bytes triggered by PW1
+
+        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
+        uart.write(to_addr);      //PW1 adress
+        uart.write(from_addr);    //TRX adress
+        uart.write(cmd_3);        
+        uart.write(0x00);
+        uart.write(mode);
+        uart.write(data_stop);    //0xFD end of telegramm
   }
