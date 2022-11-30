@@ -9,8 +9,8 @@ int tx_out = 19;
 int led = 13;             // led for debug
 
 
-/*
-// Arduino Mega 2560 config
+
+/*// Arduino Mega 2560 config
 #define uart Serial1
 int y_a = 2;
 int y_b = 3;
@@ -39,6 +39,8 @@ byte bnd_5 = 0x00;    //1*khz +100*hz
 
 byte mode = 0x02;     //mode = lsb
 byte data_stop = 0xFD;
+
+byte cmd_mode = 0;    //cmd_mode = 0 -> 0x00, 1 -> 0x03, 2 -> 0x04
 
 boolean tx_ok = false;
 
@@ -96,18 +98,16 @@ if (y_a==1 && y_b==1 && y_c==1 && y_d==1){bnd_2=0x51; bnd_3=0x00; tx_ok = false;
 
 
       if (band_old!=band){
-      data_send_1();
+      cmd_mode=0;  
+      data_send();
       }
     
-
-        daten_pw1 = uart.read();
-        if ((daten_pw1 == 254)){ 
-            PA_data_start();
+      daten_pw1 = uart.read();
+      if ((daten_pw1 == 254)){ 
+        PA_data_start();
         }
         delay (1);                      // time for buffer to fill
-
     
-
       if(tx_in == LOW && tx_ok == true){
       digitalWrite(tx_out,HIGH);
       }
@@ -129,51 +129,47 @@ void PA_data_start(){
       }
     }
       if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_2)){    //check wich command is send from PW1 -> frequence request
-          data_send_2();
+          cmd_mode=1;        
+          data_send();
       }
 
       if ((buffer_pw1tx[1] == from_addr) && ( buffer_pw1tx[2] ==  to_addr)&&(buffer_pw1tx[3] == cmd_3)){    //check wich command is send from PW1 -> mode request
-          data_send_3();
+          cmd_mode=2;        
+          data_send();
       }
 }// end of void PA_data_start
   
-   void data_send_1(){            // send bytes triggered by band change from TRX
-
+  void data_send(){
         uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
-        uart.write(to_addr);      //PW1 adress
-        uart.write(from_addr);    //TRX adress
-        uart.write(cmd_1);        //10hz+1hz
-        uart.write(bnd_5);        //1khz+100hz    
-        uart.write(bnd_4);        //10khz
-        uart.write(bnd_3);        //100khz
-        uart.write(bnd_2);        //10Mhz
-        uart.write(bnd_1);        //100Mhz
-        uart.write(data_stop);    //0xFD end of telegramm
-        band_old=band;
-  }
-
-  void data_send_2(){             // send frequence bytes triggered by PW1
-    
-        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
-        uart.write(to_addr);      //PW1 adress
-        uart.write(from_addr);    //TRX adress
-        uart.write(cmd_2);    
-        uart.write(bnd_5);        //1khz+100hz    
-        uart.write(bnd_4);        //10khz
-        uart.write(bnd_3);        //100khz
-        uart.write(bnd_2);        //10Mhz
-        uart.write(bnd_1);        //100Mhz
-        uart.write(data_stop);    //0xFD end of telegramm
-  }
-
- 
-  void data_send_3(){             // send mode bytes triggered by PW1
-
-        uart.write(data_start,2); //0xFE start of telegram, send 2x 0xFE
-        uart.write(to_addr);      //PW1 adress
-        uart.write(from_addr);    //TRX adress
-        uart.write(cmd_3);        
+         
+        if(cmd_mode == 0){
         uart.write(0x00);
-        uart.write(mode);
+        uart.write(from_addr);    //TRX adress   
+        //uart.write(cmd_1);     
+        uart.write(cmd_2); 
+        uart.write(bnd_5);        //1khz+100hz    
+        uart.write(bnd_4);        //10khz
+        uart.write(bnd_3);        //100khz
+        uart.write(bnd_2);        //10Mhz
+        uart.write(bnd_1);        //100Mhz                 
+        }
+        else if (cmd_mode == 1){
+        uart.write(to_addr);      //PW1 adress
+        uart.write(from_addr);    //TRX adress                  
+        uart.write(cmd_2);
+        uart.write(bnd_5);        //1khz+100hz    
+        uart.write(bnd_4);        //10khz
+        uart.write(bnd_3);        //100khz
+        uart.write(bnd_2);        //10Mhz
+        uart.write(bnd_1);        //100Mhz        
+        }
+        else{
+        uart.write(to_addr);      //PW1 adress
+        uart.write(from_addr);    //TRX adress                  
+        uart.write(cmd_3);
+        uart.write(0x00);
+        uart.write(mode);         //mode = lsb        
+        }
         uart.write(data_stop);    //0xFD end of telegramm
+        band_old=band;    
   }
